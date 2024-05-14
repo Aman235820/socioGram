@@ -1,0 +1,25 @@
+package com.aman.socialMedia.Entities;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "roles")
+public class Role {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Integer roleId;
+
+        private String roleName;
+
+        @ManyToMany(mappedBy = "roles" , fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+        private Set<User> users;
+}
