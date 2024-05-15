@@ -102,5 +102,10 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public Integer getUserId(String username){
+          User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+username , 0));
+          return user.getId();
+    }
+
 
 }

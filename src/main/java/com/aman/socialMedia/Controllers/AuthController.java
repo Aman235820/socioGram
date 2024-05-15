@@ -4,6 +4,7 @@ import com.aman.socialMedia.Models.ResponseDTO;
 import com.aman.socialMedia.Security.JwtAuthRequest;
 import com.aman.socialMedia.Security.JwtAuthResponse;
 import com.aman.socialMedia.Security.JwtHelper;
+import com.aman.socialMedia.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,9 @@ public class AuthController {
     @Autowired
     UserDetailsService userDetailsService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> userLogin(@RequestBody JwtAuthRequest request) {
 
@@ -38,11 +42,12 @@ public class AuthController {
             String token = jwtHelper.generateToken(userDetails);
 
             JwtAuthResponse response = new JwtAuthResponse();
-            response.setUserName(userDetails.getUsername());
             response.setToken(token);
-            response.setId(1);
+            response.setUserName(request.getUsername());
+            response.setId(this.userService.getUserId(request.getUsername()));
 
             return new ResponseEntity<>(new ResponseDTO(response, "Token successfully generated !!", false), HttpStatus.CREATED);
+
         } catch (Exception ce) {
             return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.NOT_FOUND);
         }
