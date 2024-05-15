@@ -1,12 +1,16 @@
 package com.aman.socialMedia.Services.impl;
 
+import com.aman.socialMedia.Entities.Role;
 import com.aman.socialMedia.Entities.User;
+import com.aman.socialMedia.EnumClass;
 import com.aman.socialMedia.Exceptions.ResourceNotFoundException;
 import com.aman.socialMedia.Models.UserDTOs;
+import com.aman.socialMedia.Repositories.RoleRepo;
 import com.aman.socialMedia.Repositories.UserRepo;
 import com.aman.socialMedia.Services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +26,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepo roleRepo;
+
     @Override
     public UserDTOs createUser(UserDTOs userDto) {
         User user = this.DTOtoUser(userDto);
+
+        //save encrypted password
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        //decide the role
+        Role role = this.roleRepo.findById(EnumClass.NORMAL_USER).get();
+        user.getRoles().add(role);
+
         User savedUser = this.userRepo.save(user);
         return this.UsertoDTO(savedUser);
     }
@@ -106,6 +124,4 @@ public class UserServiceImpl implements UserService {
           User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+username , 0));
           return user.getId();
     }
-
-
 }

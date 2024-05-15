@@ -1,6 +1,7 @@
 package com.aman.socialMedia.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class UserDTOs {
        @Email(message = "Please enter valid email")
        private String email;
 
-       @NotEmpty                                  //this will check both null and blank values
+       @NotEmpty   //this will check both null and blank values
+       @JsonIgnore
        @Size( min = 2 , max = 10 , message = "Password must be between 2 to 10 characters in length")
        private String password;
 

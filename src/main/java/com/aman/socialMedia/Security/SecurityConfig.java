@@ -3,6 +3,7 @@ package com.aman.socialMedia.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,10 +33,10 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)                              //cross-site request forgery
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/socialMedia/auth/login/**")
+                        req -> req.requestMatchers("/socialMedia/auth/login/**")
                                 .permitAll()
-  .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
-
+                                .requestMatchers(HttpMethod.GET , "/socialMedia/posts/**").permitAll()
+                                .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated()
                 )
