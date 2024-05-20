@@ -2,11 +2,13 @@ package com.aman.socialMedia.Controllers;
 
 import com.aman.socialMedia.Models.ResponseDTO;
 import com.aman.socialMedia.Models.UserDTOs;
+import com.aman.socialMedia.Security.JwtHelper;
 import com.aman.socialMedia.Services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +21,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/createUser")
-    public ResponseEntity<ResponseDTO> createUser(@Valid @RequestBody UserDTOs user) {
 
-        ResponseDTO response;
-
-        try {
-            UserDTOs createdUser = this.userService.createUser(user);
-            return new ResponseEntity<>(new ResponseDTO(createdUser, "Success", false), HttpStatus.CREATED);
-        } catch (Exception ce) {
-            return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
     @PutMapping("updateUser/{userId}")
     public ResponseEntity<ResponseDTO> updateUser(@Valid @RequestBody UserDTOs user, @PathVariable("userId") Integer uid) {

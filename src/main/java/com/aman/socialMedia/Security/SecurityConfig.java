@@ -33,7 +33,7 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)                              //cross-site request forgery
                 .authorizeHttpRequests(
-                        req -> req.requestMatchers("/socialMedia/auth/login/**")
+                        req -> req.requestMatchers("/socialMedia/auth/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET , "/socialMedia/posts/**").permitAll()
                                 .requestMatchers("/admin_only/**").hasAuthority("ADMIN")

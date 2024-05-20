@@ -1,10 +1,12 @@
 package com.aman.socialMedia.Controllers;
 
 import com.aman.socialMedia.Models.ResponseDTO;
+import com.aman.socialMedia.Models.UserDTOs;
 import com.aman.socialMedia.Security.JwtAuthRequest;
 import com.aman.socialMedia.Security.JwtAuthResponse;
 import com.aman.socialMedia.Security.JwtHelper;
 import com.aman.socialMedia.Services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,27 @@ public class AuthController {
         }
 
     }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<ResponseDTO> createUser(@Valid @RequestBody UserDTOs request) {
+        try {
+            UserDTOs createdUser = this.userService.createUser(request);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+            String token = this.jwtHelper.generateToken(userDetails);
+
+            JwtAuthResponse res = new JwtAuthResponse();
+            res.setId(this.userService.getUserId(userDetails.getUsername()));
+            res.setUserName(request.getEmail());
+            res.setToken(token);
+
+            return new ResponseEntity<>(new ResponseDTO(res, "Success", false), HttpStatus.CREATED);
+        } catch (Exception ce) {
+            return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
     private void authenticate(String username, String password) {
 
