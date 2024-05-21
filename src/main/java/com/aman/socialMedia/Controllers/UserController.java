@@ -37,7 +37,7 @@ public class UserController {
     }
 
     //For Admin only
-    @PreAuthorize("hasRole('ADMIN_USER')")
+    //@PreAuthorize("hasRole('ADMIN_USER')")
     @DeleteMapping("/deleteUser/{userId}")
     public ResponseEntity<ResponseDTO> deleteUser(@PathVariable Integer userId) {
 
