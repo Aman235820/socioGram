@@ -1,6 +1,7 @@
 package com.aman.socialMedia.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Primary;
@@ -27,6 +28,7 @@ public class User implements UserDetails {
     @Column(name = "Email", nullable = false)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private int age;

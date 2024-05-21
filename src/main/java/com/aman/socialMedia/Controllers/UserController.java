@@ -22,8 +22,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
-
     @PutMapping("updateUser/{userId}")
     public ResponseEntity<ResponseDTO> updateUser(@Valid @RequestBody UserDTOs user, @PathVariable("userId") Integer uid) {
         ResponseDTO response;
@@ -37,7 +35,7 @@ public class UserController {
     }
 
     //For Admin only
-    //@PreAuthorize("hasRole('ADMIN_USER')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/deleteUser/{userId}")
     public ResponseEntity<ResponseDTO> deleteUser(@PathVariable Integer userId) {
 
