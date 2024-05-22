@@ -77,7 +77,15 @@ public class AuthController {
         }
     }
 
-
+    @PostMapping("/resetPassword")
+    public ResponseEntity<ResponseDTO> resetPassword(@RequestBody JwtAuthRequest request){
+        try{
+            String response = this.userService.resetPassword(request) ? "Password changed successfully !!" : "Enter correct email address!!";
+            return new ResponseEntity<>(new ResponseDTO(null , response , false) ,HttpStatus.OK);
+        } catch(Exception ce){
+            return new ResponseEntity<>(new ResponseDTO(null , ce.getMessage() , true) , HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private void authenticate(String username, String password) {
 

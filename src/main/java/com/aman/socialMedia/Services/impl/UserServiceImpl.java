@@ -7,6 +7,7 @@ import com.aman.socialMedia.Exceptions.ResourceNotFoundException;
 import com.aman.socialMedia.Models.UserDTOs;
 import com.aman.socialMedia.Repositories.RoleRepo;
 import com.aman.socialMedia.Repositories.UserRepo;
+import com.aman.socialMedia.Security.JwtAuthRequest;
 import com.aman.socialMedia.Services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setAge(userDto.getAge());
 
         User updatedUser = this.userRepo.save(user);
@@ -123,5 +125,21 @@ public class UserServiceImpl implements UserService {
     public Integer getUserId(String username){
           User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+username , 0));
           return user.getId();
+    }
+
+    @Override
+    public boolean resetPassword(JwtAuthRequest request) {
+
+              Optional<User> u = this.userRepo.findByEmail(request.getUsername());
+
+              if(u.isPresent()){
+                  User user = this.userRepo.findByEmail(request.getUsername()).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+ request.getUsername() , 0));
+                  user.setPassword(passwordEncoder.encode(request.getPassword()));
+                  this.userRepo.save(user);
+                  return true;
+              }
+
+              return false;
+
     }
 }

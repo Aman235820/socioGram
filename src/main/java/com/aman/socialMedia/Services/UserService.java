@@ -1,6 +1,7 @@
 package com.aman.socialMedia.Services;
 
 import com.aman.socialMedia.Models.UserDTOs;
+import com.aman.socialMedia.Security.JwtAuthRequest;
 
 import  java.util.List;
 
@@ -17,5 +18,5 @@ public interface UserService {
 
           Integer getUserId(String username);
 
-
+          boolean resetPassword(JwtAuthRequest request);
 }
