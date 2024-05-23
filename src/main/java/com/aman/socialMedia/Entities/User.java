@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private List<Comments> comments = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)                      //The EAGER strategy is a requirement on the persistence provider runtime that data must be eagerly fetched. The FetchType.LAZY strategy is a hint to the persistence provider runtime that data should be fetched lazily when it is first accessed.
+    @ManyToMany(fetch = FetchType.EAGER)                      //The EAGER strategy is a requirement on the persistence provider runtime that data must be eagerly fetched. The FetchType.LAZY strategy is a hint to the persistence provider runtime that data should be fetched lazily when it is first accessed.
     @JoinTable(name = "user_role",
        joinColumns = {
             @JoinColumn(name = "userId" , referencedColumnName = "id")

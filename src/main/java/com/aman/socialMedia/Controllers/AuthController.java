@@ -61,6 +61,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> createUser(@Valid @RequestBody UserDTOs request) {
         try {
+            if(userService.checkUniqueEmail(request.getEmail())){
+                  throw new Exception("Username already in use, try different !!");
+            }
             UserDTOs createdUser = this.userService.createUser(request);
             UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
             String token = this.jwtHelper.generateToken(userDetails);
@@ -73,7 +76,7 @@ public class AuthController {
 
             return new ResponseEntity<>(new ResponseDTO(res, "Success", false), HttpStatus.CREATED);
         } catch (Exception ce) {
-            return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.BAD_REQUEST);
         }
     }
 
