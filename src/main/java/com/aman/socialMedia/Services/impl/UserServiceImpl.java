@@ -78,10 +78,6 @@ public class UserServiceImpl implements UserService {
         List<UserDTOs> userDtoList = new ArrayList<>();
         userList = this.userRepo.findAll();
 
-//             for(User  u : userList){
-//                  userDtoList.add(this.UsertoDTO(u));
-//             }
-
         userDtoList = userList.stream().map(item -> this.UsertoDTO(item)).collect(Collectors.toList());
         return userDtoList;
     }

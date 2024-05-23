@@ -5,6 +5,7 @@ import com.aman.socialMedia.Models.UserDTOs;
 import com.aman.socialMedia.Security.JwtAuthRequest;
 import com.aman.socialMedia.Security.JwtHelper;
 import com.aman.socialMedia.Services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,21 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PutMapping("updateUser/{userId}")
-    public ResponseEntity<ResponseDTO> updateUser(@Valid @RequestBody UserDTOs user, @PathVariable("userId") Integer uid) {
+    @Autowired
+    JwtHelper jwtHelper;
+
+    @PutMapping("updateUser")
+    public ResponseEntity<ResponseDTO> updateUser(@Valid @RequestBody UserDTOs user, HttpServletRequest request) {
         ResponseDTO response;
         try {
-            UserDTOs updatedUser = this.userService.updateUser(user, uid);
+            String reqHeader = request.getHeader("Authorization");
+            String token = reqHeader.substring(7);
+            String email = this.jwtHelper.getUsernameFromToken(token);
+            if(!email.equals(user.getEmail()) && user.getEmail()!=null){
+                throw new Exception("Can't modify email");
+            }
+            user.setEmail(email);
+            UserDTOs updatedUser = this.userService.updateUser(user, this.userService.getUserId(email));
             response = new ResponseDTO(updatedUser, "Successfully Updated", false);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception ce) {
