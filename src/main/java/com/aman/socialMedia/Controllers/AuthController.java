@@ -96,5 +96,4 @@ public class AuthController {
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
     }
 
-
 }
