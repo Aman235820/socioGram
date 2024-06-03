@@ -52,7 +52,7 @@ public class AuthController {
             return new ResponseEntity<>(new ResponseDTO(response, "Token successfully generated !!", false), HttpStatus.CREATED);
 
         } catch (Exception ce) {
-            return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDTO(null, ce.getMessage(), true), HttpStatus.OK);
         }
 
     }
