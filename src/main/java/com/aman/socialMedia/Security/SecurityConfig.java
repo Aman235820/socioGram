@@ -42,6 +42,7 @@ public class SecurityConfig {
                         req -> req.requestMatchers("/socialMedia/auth/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET , "/socialMedia/posts/**").permitAll()
+                                .requestMatchers("/images/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
