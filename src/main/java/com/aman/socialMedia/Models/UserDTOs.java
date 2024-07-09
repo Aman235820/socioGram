@@ -16,7 +16,7 @@ public class UserDTOs {
 
        @NotEmpty
        @Size( min = 3 , message = "Username must be more than 4 characters")
-       @Pattern(regexp = "^[a-zA-Z\\\\s]+$" , message = "Username can have characters only!")
+       @Pattern(regexp = "^[a-zA-Z\\s]+$" , message = "Username can have characters only!")
        private String name;
 
        @Email(message = "Please enter valid email")

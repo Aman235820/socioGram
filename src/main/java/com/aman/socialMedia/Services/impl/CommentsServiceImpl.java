@@ -6,6 +6,7 @@ import com.aman.socialMedia.Entities.User;
 import com.aman.socialMedia.Exceptions.InvalidAccessException;
 import com.aman.socialMedia.Exceptions.ResourceNotFoundException;
 import com.aman.socialMedia.Models.CommentsDTO;
+import com.aman.socialMedia.Models.PostsDTO;
 import com.aman.socialMedia.Repositories.CommentsRepo;
 import com.aman.socialMedia.Repositories.PostsRepo;
 import com.aman.socialMedia.Repositories.UserRepo;
@@ -58,7 +59,9 @@ public class CommentsServiceImpl implements CommentsService {
         Posts p = c.getPost();
         Integer pId = p.getPostId();
 
-        if(Objects.equals(uId, userId) && Objects.equals(pId, postId)){
+        Integer creatorId =  p.getUser().getId();
+
+        if(( Objects.equals(creatorId, userId) ||  Objects.equals(uId, userId)) && Objects.equals(pId, postId)){
              this.commentRepo.delete(c);
         }else{
             throw new InvalidAccessException(postId , userId);

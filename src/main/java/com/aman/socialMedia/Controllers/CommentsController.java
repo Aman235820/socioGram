@@ -16,6 +16,7 @@ public class CommentsController {
     @Autowired
     private CommentsService commentService;
 
+
     @PostMapping(value = "/writeComment/userId/{uId}/postId/{pId}")
     public ResponseEntity<ResponseDTO> writeComment(@Valid @RequestBody CommentsDTO comment,
                                                     @PathVariable(name = "uId") Integer userId,

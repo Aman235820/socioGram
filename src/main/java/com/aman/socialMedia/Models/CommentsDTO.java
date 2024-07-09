@@ -15,4 +15,6 @@ public class CommentsDTO {
        @NotEmpty
        private String content;
 
+       private UserDTOs user;
+
 }
