@@ -48,6 +48,9 @@ public class AuthController {
             response.setUserName(request.getUsername());
             response.setId(this.userService.getUserId(request.getUsername()));
             response.setRole(userDetails.getAuthorities());
+            response.setPassword(userDetails.getPassword());
+            response.setAge(this.userService.getUser(request.getUsername()).getAge());
+            response.setName(this.userService.getUser(request.getUsername()).getName());
 
             return new ResponseEntity<>(new ResponseDTO(response, "Token successfully generated !!", false), HttpStatus.CREATED);
 
@@ -73,6 +76,9 @@ public class AuthController {
             res.setUserName(request.getEmail());
             res.setToken(token);
             res.setRole(userDetails.getAuthorities());
+            res.setPassword(userDetails.getPassword());
+            res.setAge(this.userService.getUser(userDetails.getUsername()).getAge());
+            res.setName(this.userService.getUser(userDetails.getUsername()).getName());
 
             return new ResponseEntity<>(new ResponseDTO(res, "Success", false), HttpStatus.CREATED);
         } catch (Exception ce) {

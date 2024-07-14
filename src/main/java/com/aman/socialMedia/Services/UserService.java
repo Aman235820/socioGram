@@ -18,6 +18,8 @@ public interface UserService {
 
           Integer getUserId(String username);
 
+          UserDTOs getUser (String username);
+
           boolean resetPassword(JwtAuthRequest request);
 
           boolean checkUniqueEmail(String email);

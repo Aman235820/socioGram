@@ -123,6 +123,11 @@ public class UserServiceImpl implements UserService {
           return user.getId();
     }
 
+    public UserDTOs getUser(String username){
+        User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+username , 0));
+        return modelMapper.map(user , UserDTOs.class);
+    }
+
     @Override
     public boolean resetPassword(JwtAuthRequest request) {
 
