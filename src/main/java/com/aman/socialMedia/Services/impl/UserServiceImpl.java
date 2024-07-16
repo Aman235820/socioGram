@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         //decide the role
-        Role role = this.roleRepo.findById(EnumClass.NORMAL_USER).orElseThrow(()->new ResourceNotFoundException("Role" , "Id" , EnumClass.NORMAL_USER));
+        Role role = this.roleRepo.findById(EnumClass.NORMAL_USER).orElseThrow(() -> new ResourceNotFoundException("Role", "Id", EnumClass.NORMAL_USER));
         user.getRoles().add(role);
 
         User savedUser = this.userRepo.save(user);
@@ -56,7 +56,9 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        if (!(userDto.getPassword()).isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
         user.setAge(userDto.getAge());
 
         User updatedUser = this.userRepo.save(user);
@@ -84,8 +86,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer userId) {
-           User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User" , "Id" , userId));
-           this.userRepo.delete(user);
+        User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+        this.userRepo.delete(user);
     }
 
 
@@ -106,7 +108,7 @@ public class UserServiceImpl implements UserService {
     //mapping the User object into UserDTO object using modalMapper (this is a substitute method of the above mentioned way , more reliable and less lines of code)
     private UserDTOs UsertoDTO(User user) {
         UserDTOs userDto = new UserDTOs();
-        userDto =  this.modelMapper.map(user , UserDTOs.class);
+        userDto = this.modelMapper.map(user, UserDTOs.class);
 
 //        userDto.setId(user.getId());
 //        userDto.setName(user.getName());
@@ -118,29 +120,29 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public Integer getUserId(String username){
-          User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+username , 0));
-          return user.getId();
+    public Integer getUserId(String username) {
+        User user = this.userRepo.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User", "UserName : " + username, 0));
+        return user.getId();
     }
 
-    public UserDTOs getUser(String username){
-        User user = this.userRepo.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+username , 0));
-        return modelMapper.map(user , UserDTOs.class);
+    public UserDTOs getUser(String username) {
+        User user = this.userRepo.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User", "UserName : " + username, 0));
+        return modelMapper.map(user, UserDTOs.class);
     }
 
     @Override
     public boolean resetPassword(JwtAuthRequest request) {
 
-              if(this.checkUniqueEmail(request.getUsername())){
-                  User user = this.userRepo.findByEmail(request.getUsername()).orElseThrow(()->new ResourceNotFoundException("User" , "UserName : "+ request.getUsername() , 0));
-                  user.setPassword(passwordEncoder.encode(request.getPassword()));
-                  this.userRepo.save(user);
-                  return true;
-              }
-              return false;
+        if (this.checkUniqueEmail(request.getUsername())) {
+            User user = this.userRepo.findByEmail(request.getUsername()).orElseThrow(() -> new ResourceNotFoundException("User", "UserName : " + request.getUsername(), 0));
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            this.userRepo.save(user);
+            return true;
+        }
+        return false;
     }
 
-    public boolean checkUniqueEmail(String email){
+    public boolean checkUniqueEmail(String email) {
         Optional<User> u = this.userRepo.findByEmail(email);
         return u.isPresent();
     }

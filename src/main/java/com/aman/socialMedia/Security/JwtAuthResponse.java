@@ -12,7 +12,6 @@ public class JwtAuthResponse {
      private String token;
      private String userName;
      private Integer id;
-     private String password;
      private Integer age;
      private  String name;
      private Collection<? extends GrantedAuthority> role;

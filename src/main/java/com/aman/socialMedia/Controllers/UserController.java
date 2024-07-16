@@ -28,7 +28,7 @@ public class UserController {
     JwtHelper jwtHelper;
 
     @PutMapping("updateUser")
-    public ResponseEntity<ResponseDTO> updateUser(@Valid @RequestBody UserDTOs user, HttpServletRequest request) {
+    public ResponseEntity<ResponseDTO> updateUser(@RequestBody UserDTOs user, HttpServletRequest request) {
         ResponseDTO response;
         try {
             String reqHeader = request.getHeader("Authorization");
