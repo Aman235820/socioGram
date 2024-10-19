@@ -8,6 +8,8 @@ import com.aman.socialMedia.Services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,5 +84,12 @@ public class UserController {
             return new ResponseEntity<>(new ResponseDTO(null , ce.getMessage() , true) , HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/clearUserCache")
+    @CacheEvict(value = "RedisData", allEntries = true)
+    public ResponseEntity<ResponseDTO> clearUserCache(){
+           return new ResponseEntity<>(new ResponseDTO(null,"Cache cleared successfully",false) , HttpStatus.OK);
+    }
+
 
 }

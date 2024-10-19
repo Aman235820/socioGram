@@ -11,6 +11,10 @@ import com.aman.socialMedia.Security.JwtAuthRequest;
 import com.aman.socialMedia.Services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +39,8 @@ public class UserServiceImpl implements UserService {
     private RoleRepo roleRepo;
 
     @Override
+    @CachePut(key = "#result.getId()" , value = "RedisData")
+    @CacheEvict(key = "'allUsers'", value = "RedisData")
     public UserDTOs createUser(UserDTOs userDto) {
         User user = this.DTOtoUser(userDto);
 
@@ -46,10 +52,12 @@ public class UserServiceImpl implements UserService {
         user.getRoles().add(role);
 
         User savedUser = this.userRepo.save(user);
+
         return this.UsertoDTO(savedUser);
     }
 
     @Override
+    @CachePut(key = "#userId" , value = "RedisData")
     public UserDTOs updateUser(UserDTOs userDto, Integer userId) {
 
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
@@ -62,29 +70,32 @@ public class UserServiceImpl implements UserService {
         user.setAge(userDto.getAge());
 
         User updatedUser = this.userRepo.save(user);
-
         return this.UsertoDTO(updatedUser);
     }
 
     @Override
+    @Cacheable(key = "#userId" , value = "RedisData")
     public UserDTOs getUserById(Integer userId) {
-
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
         return this.UsertoDTO(user);
     }
 
     @Override
+    @Cacheable(key = "'allUsers'" , value = "RedisData")
     public List<UserDTOs> getAllUsers() {
 
         List<User> userList = new ArrayList<>();
         List<UserDTOs> userDtoList = new ArrayList<>();
         userList = this.userRepo.findAll();
-
         userDtoList = userList.stream().map(item -> this.UsertoDTO(item)).collect(Collectors.toList());
         return userDtoList;
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(key = "#userId", value = "RedisData"),
+            @CacheEvict(key = "'allUsers'", value = "RedisData")
+    })
     public void deleteUser(Integer userId) {
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
         this.userRepo.delete(user);

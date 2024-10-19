@@ -11,6 +11,7 @@ import com.aman.socialMedia.Services.PostsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -121,6 +122,7 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
+    //@Cacheable(key = "'allPosts'" , value = "RedisData")
     public PaginationResponseDTO getAllPosts(Integer pageNumber, Integer pageSize , String sortBy , String sortOrder) {
 
         Sort sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
